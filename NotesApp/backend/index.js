@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/notes", noteRoutes);
+app.use("/", noteRoutes);
 
 // Koneksi ke database
 sequelize.sync()
@@ -24,3 +24,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => console.log(`Server berjalan di http://localhost:${PORT}`));
+
+

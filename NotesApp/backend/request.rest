@@ -1,11 +1,11 @@
 ### Get semua catatan
-GET http://localhost:5000/api/notes
+GET http://localhost:5000/
 
 ### Get catatan berdasarkan ID
-GET http://localhost:5000/api/notes/1
+GET http://localhost:5000/1
 
 ### Tambah catatan
-POST http://localhost:5000/api/notes
+POST http://localhost:5000/
 Content-Type: application/json
 
 {
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ### Update catatan
-PUT http://localhost:5000/api/notes/1
+PUT http://localhost:5000/1
 Content-Type: application/json
 
 {
@@ -23,4 +23,4 @@ Content-Type: application/json
 }
 
 ### Hapus catatan
-DELETE http://localhost:5000/api/notes/1
+DELETE http://localhost:5000/1
