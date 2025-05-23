@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "https://be-525057870643.us-central1.run.app",
+  "https://be-notesapp-525057870643.us-central1.run.app",
   // "https://notes-notesappbe-525057870643.us-central1.run.app",
 ];
 
