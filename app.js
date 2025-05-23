@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:5000";
+// const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://h-05-450908.uc.r.appspot.com";
 // const BASE_URL = "https://be-525057870643.us-central1.run.app";
 // const BASE_URL = "https://notes-notesappbe-525057870643.us-central1.run.app";
 
