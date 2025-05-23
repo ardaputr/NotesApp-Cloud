@@ -1,6 +1,6 @@
 // const BASE_URL = "http://localhost:5000";
-const BASE_URL = "https://be-525057870643.us-central1.run.app";
-// const BASE_URL = "https://notes-notesappbe-525057870643.us-central1.run.app";
+// const BASE_URL = "https://be-525057870643.us-central1.run.app";
+const BASE_URL = "https://notes-notesappbe-525057870643.us-central1.run.app";
 
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("accessToken");
