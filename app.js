@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       await fetch(`${BASE_URL}/auth/logout`, {
         method: "POST",
-        credentials: "include" // kirim cookie agar refresh token dihapus server
+        credentials: "include"
       });
     } catch (err) {
       console.error("Logout request gagal", err);
@@ -35,17 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let selectedNoteId = null;
 
-// Fungsi fetch yang otomatis refresh token jika expired
 async function fetchWithRefresh(url, options = {}) {
   let token = localStorage.getItem("accessToken");
   if (!options.headers) options.headers = {};
   options.headers["Authorization"] = `Bearer ${token}`;
-  options.credentials = "include"; // agar cookie refreshToken ikut terkirim
+  options.credentials = "include";
 
   let response = await fetch(url, options);
 
   if (response.status === 401 || response.status === 403) {
-    // coba refresh token
     const refreshRes = await fetch(`${BASE_URL}/auth/refresh-token`, {
       method: "POST",
       credentials: "include",
@@ -55,11 +53,9 @@ async function fetchWithRefresh(url, options = {}) {
       const data = await refreshRes.json();
       localStorage.setItem("accessToken", data.accessToken);
 
-      // ulangi request asli dengan token baru
       options.headers["Authorization"] = `Bearer ${data.accessToken}`;
       response = await fetch(url, options);
     } else {
-      // refresh token gagal, redirect login
       alert("Session habis, silakan login ulang");
       localStorage.removeItem("accessToken");
       window.location.href = "auth.html";

@@ -12,9 +12,9 @@ if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production", // hanya HTTPS di production
+  secure: process.env.NODE_ENV === "production",
   sameSite: "strict",
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 hari dalam ms
+  maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
 exports.register = async (req, res) => {
@@ -50,24 +50,20 @@ exports.login = async (req, res) => {
     if (!validPassword)
       return res.status(400).json({ message: "Invalid email or password" });
 
-    // Buat access token (expired 1 jam)
     const accessToken = jwt.sign(
       { id: user.id, name: user.name, email: user.email },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    // Buat refresh token (expired 7 hari)
     const refreshToken = jwt.sign(
       { id: user.id },
       JWT_REFRESH_SECRET,
       { expiresIn: "7d" }
     );
 
-    // Simpan refresh token di HTTP-only cookie
     res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 
-    // Kirim access token dan info user
     res.json({
       accessToken,
       user: { id: user.id, name: user.name, email: user.email },
@@ -84,7 +80,6 @@ exports.refreshToken = (req, res) => {
   jwt.verify(token, JWT_REFRESH_SECRET, (err, payload) => {
     if (err) return res.status(403).json({ message: "Invalid refresh token" });
 
-    // Buat access token baru
     const newAccessToken = jwt.sign(
       { id: payload.id },
       JWT_SECRET,
@@ -100,7 +95,6 @@ exports.logout = (req, res) => {
   res.json({ message: "Logout successful" });
 };
 
-// Middleware authenticateToken (untuk proteksi route)
 exports.authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
