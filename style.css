@@ -1,0 +1,224 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+body {
+    background: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background: #2A3D66;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile h2 {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Tombol */
+button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+.btn-logout {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.btn-logout:hover,
+.btn-logout:focus {
+  background-color: #b02a37;
+  outline: none;
+  transform: scale(1.05);
+}
+
+/* Search Bar */
+.search-bar {
+    margin-top: 15px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+}
+
+/* Notes List */
+
+.notes-list {
+    margin-top: 20px;
+    max-height: 65vh;
+    overflow-y: auto;
+    direction: ltr;
+}
+
+.notes-list::-webkit-scrollbar {
+    width: 8px; 
+    background: transparent;
+}
+
+.notes-list::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.notes-list::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.notes-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+.notes-list:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+
+ul li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+
+ul li:hover, .active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Note Details */
+.note-details {
+    flex: 2;
+    padding: 25px;
+    background: white;
+    border-left: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Title Styling */
+#note-title {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 12px;
+    border: none;
+    border-bottom: 2px solid #007BFF;
+    width: 100%;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border-bottom 0.3s ease;
+}
+
+#note-title:focus {
+    border-bottom: 2px solid #0056b3;
+}
+
+/* Textarea Styling */
+#note-content {
+    width: 100%;
+    height: 60vh;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: border 0.3s ease;
+}
+
+#note-content:focus {
+    border: 1px solid #007BFF;
+}
+
+/* Note Buttons */
+.note-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 12px;
+}
+
+.note-buttons button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.note-buttons button:hover {
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .note-details {
+        border-left: none;
+        box-shadow: none;
+    }
+}
+
