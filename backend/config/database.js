@@ -1,21 +1,3 @@
-// const { Sequelize } = require("sequelize");
-
-// const sequelize = new Sequelize("notesapp", "root", "Tanyaarda", {
-//   host: "34.72.212.141",
-//   dialect: "mysql",
-// });
-
-// module.exports = sequelize;
-
-// const { Sequelize } = require("sequelize");
-
-// const sequelize = new Sequelize("notesapp", "root", "", {
-//   host: "localhost",
-//   dialect: "mysql",
-// });
-
-// module.exports = sequelize;
-
 require('dotenv').config();
 const { Sequelize } = require("sequelize");
 
