@@ -1,5 +1,5 @@
 ### Get semua catatan
-GET http://localhost:5000/
+GET http://localhost:5000/notes
 
 ### Get catatan berdasarkan ID
 GET http://localhost:5000/1
