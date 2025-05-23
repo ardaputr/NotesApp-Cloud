@@ -13,7 +13,8 @@ const allowedOrigins = [
   "http://localhost:5000",
   "http://127.0.0.1:5500",
   "http://localhost:3000",
-  "https://be-notesapp-525057870643.us-central1.run.app", 
+  "https://be-notesapp-525057870643.us-central1.run.app",
+  "https://notes-notesappbe-525057870643.us-central1.run.app",
 ];
 
 app.use(cors({
