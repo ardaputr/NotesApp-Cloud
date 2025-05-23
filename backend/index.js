@@ -1,39 +1,39 @@
 const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const sequelize = require("./config/database.js");
 const noteRoutes = require("./routes/noteRoutes.js");
 const authRoutes = require("./routes/authRoutes.js");
-const cors = require("cors");
 const { authenticateToken } = require("./controller/authController");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-// const allowedOrigins = [
-//   "https://h-05-450908.uc.r.appspot.com"
-// ];
+const allowedOrigins = [
+  "http://localhost:5000",
+  "http://127.0.0.1:5500",
+  "http://localhost:3000",
+];
 
-// app.use(cors({
-//   origin: function(origin, callback) {
-//     if (!origin) return callback(null, true);
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); 
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true, 
+}));
 
-//     if (allowedOrigins.indexOf(origin) === -1) {
-//       const msg = `CORS policy tidak mengizinkan origin ini: ${origin}`;
-//       return callback(new Error(msg), false);
-//     }
-
-//     return callback(null, true);
-//   },
-// }));
-app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
-// Route auth (register, login)
+// Routes
 app.use("/auth", authRoutes);
-
-// Middleware JWT untuk route notes
 app.use("/notes", authenticateToken, noteRoutes);
 
-// Koneksi ke database dan jalankan server
 sequelize.sync()
   .then(() => console.log("Database terhubung"))
   .catch(err => console.error("Gagal koneksi ke database", err));

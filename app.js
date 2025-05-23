@@ -1,7 +1,6 @@
 const BASE_URL = "http://localhost:5000";
 // const BASE_URL = "https://be-525057870643.us-central1.run.app";
 
-
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
@@ -19,33 +18,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logout-btn");
-  logoutBtn.addEventListener("click", () => {
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      await fetch(`${BASE_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include" // kirim cookie agar refresh token dihapus server
+      });
+    } catch (err) {
+      console.error("Logout request gagal", err);
+    }
     localStorage.removeItem("accessToken");
     alert("Logout berhasil");
     window.location.href = "auth.html"; 
   });
 });
 
-
 let selectedNoteId = null;
 
-async function loadNotes() {
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    alert("Silakan login terlebih dahulu");
-    window.location.href = "auth.html";
-    return;
-  }
+// Fungsi fetch yang otomatis refresh token jika expired
+async function fetchWithRefresh(url, options = {}) {
+  let token = localStorage.getItem("accessToken");
+  if (!options.headers) options.headers = {};
+  options.headers["Authorization"] = `Bearer ${token}`;
+  options.credentials = "include"; // agar cookie refreshToken ikut terkirim
 
-  try {
-    const response = await fetch(`${BASE_URL}/notes`, {
-      headers: { Authorization: `Bearer ${token}` },
+  let response = await fetch(url, options);
+
+  if (response.status === 401 || response.status === 403) {
+    // coba refresh token
+    const refreshRes = await fetch(`${BASE_URL}/auth/refresh-token`, {
+      method: "POST",
+      credentials: "include",
     });
 
-    if (response.status === 401 || response.status === 403) {
-      alert("Token tidak valid atau habis masa berlakunya. Silakan login ulang.");
+    if (refreshRes.ok) {
+      const data = await refreshRes.json();
+      localStorage.setItem("accessToken", data.accessToken);
+
+      // ulangi request asli dengan token baru
+      options.headers["Authorization"] = `Bearer ${data.accessToken}`;
+      response = await fetch(url, options);
+    } else {
+      // refresh token gagal, redirect login
+      alert("Session habis, silakan login ulang");
       localStorage.removeItem("accessToken");
       window.location.href = "auth.html";
+    }
+  }
+
+  return response;
+}
+
+async function loadNotes() {
+  try {
+    const response = await fetchWithRefresh(`${BASE_URL}/notes`);
+
+    if (!response.ok) {
+      alert("Gagal memuat catatan");
       return;
     }
 
@@ -79,7 +108,6 @@ function prepareNewNote() {
 }
 
 async function saveNewNote() {
-  const token = localStorage.getItem("accessToken");
   const judul = document.getElementById("note-title").value;
   const deskripsi = document.getElementById("note-content").value;
 
@@ -89,12 +117,9 @@ async function saveNewNote() {
   }
 
   try {
-    const response = await fetch(`${BASE_URL}/notes`, {
+    const response = await fetchWithRefresh(`${BASE_URL}/notes`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ judul, deskripsi }),
     });
 
@@ -111,16 +136,11 @@ async function saveNewNote() {
 }
 
 async function loadNoteDetails(noteId) {
-  const token = localStorage.getItem("accessToken");
   try {
-    const response = await fetch(`${BASE_URL}/notes/${noteId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await fetchWithRefresh(`${BASE_URL}/notes/${noteId}`);
 
-    if (response.status === 401 || response.status === 403) {
-      alert("Token tidak valid atau habis masa berlakunya. Silakan login ulang.");
-      localStorage.removeItem("accessToken");
-      window.location.href = "auth.html";
+    if (!response.ok) {
+      alert("Gagal memuat detail catatan");
       return;
     }
 
@@ -140,8 +160,6 @@ async function loadNoteDetails(noteId) {
 }
 
 async function updateNote() {
-  const token = localStorage.getItem("accessToken");
-
   if (!selectedNoteId) {
     alert("Select a note!");
     return;
@@ -156,12 +174,9 @@ async function updateNote() {
   }
 
   try {
-    const response = await fetch(`${BASE_URL}/notes/${selectedNoteId}`, {
+    const response = await fetchWithRefresh(`${BASE_URL}/notes/${selectedNoteId}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ judul: updatedTitle, deskripsi: updatedContent }),
     });
 
@@ -177,8 +192,6 @@ async function updateNote() {
 }
 
 async function deleteNote() {
-  const token = localStorage.getItem("accessToken");
-
   if (!selectedNoteId) {
     alert("Select a note!");
     return;
@@ -187,9 +200,8 @@ async function deleteNote() {
   if (!confirm("Are you sure you want to delete this note?")) return;
 
   try {
-    const response = await fetch(`${BASE_URL}/notes/${selectedNoteId}`, {
+    const response = await fetchWithRefresh(`${BASE_URL}/notes/${selectedNoteId}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
     });
 
     if (response.ok) {
