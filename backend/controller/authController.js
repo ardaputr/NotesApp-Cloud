@@ -3,7 +3,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
-const JWT_SECRET = process.env.JWT_SECRET || "rahasia";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not set in environment variables");
+}
 
 exports.register = async (req, res) => {
   try {
