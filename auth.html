@@ -13,28 +13,33 @@
   <!-- Login Form -->
   <form id="loginForm" class="active" novalidate>
     <input type="email" id="loginEmail" placeholder="Email" required />
-    <input type="password" id="loginPassword" placeholder="Password" required />
+    <div class="password-wrapper">
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <span id="toggleLoginPassword" class="password-toggle-icon" title="Show/Hide Password">&#128065;</span>
+      <!-- &#128065; adalah emoji mata sebagai ikon -->
+    </div>
     <button type="submit">Login</button>
   </form>
 
   <!-- Register Form -->
-  <form id="registerForm" novalidate>
+  <form id="registerForm" novalidate style="display:none;">
     <input type="text" id="regName" placeholder="Name" required />
     <input type="email" id="regEmail" placeholder="Email" required />
-    <input type="password" id="regPassword" placeholder="Password" required />
+    <div class="password-wrapper">
+      <input type="password" id="regPassword" placeholder="Password" required />
+      <span id="toggleRegPassword" class="password-toggle-icon" title="Show/Hide Password">&#128065;</span>
+    </div>
     <button type="submit">Register</button>
   </form>
   
-<p id="toggle-text">
-  Don't have an account? <span id="toggle-btn">Sign Up</span>
-</p>
+  <p id="toggle-text">
+    Don't have an account? <span id="toggle-btn">Sign Up</span>
+  </p>
+
   <script>
     const BASE_URL = "http://localhost:5000/auth";
     // const BASE_URL = "https://notes-notesappbe-525057870643.us-central1.run.app";
     // const BASE_URL = "https://be-525057870643.us-central1.run.app/auth";
-    // const BASE_URL = "https://be-notesapp-525057870643.us-central1.run.app";
-    // const BASE_URL = "https://be-525057870643.us-central1.run.app";
-    
 
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
@@ -43,24 +48,44 @@
     const formTitle = document.getElementById("form-title");
 
     function toggleForms() {
-      if (loginForm.classList.contains("active")) {
-        loginForm.classList.remove("active");
-        registerForm.classList.add("active");
+      if (loginForm.style.display !== "none") {
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
         formTitle.textContent = "Register";
 
-        toggleText.innerHTML = 'Have an account? <span class="toggle-link" id="toggle-btn">Sign In</span>';
+        toggleText.innerHTML = 'Have an account? <span id="toggle-btn" style="color:#007bff; cursor:pointer;">Sign In</span>';
         document.getElementById("toggle-btn").addEventListener("click", toggleForms);
       } else {
-        registerForm.classList.remove("active");
-        loginForm.classList.add("active");
+        registerForm.style.display = "none";
+        loginForm.style.display = "block";
         formTitle.textContent = "Login";
 
-        toggleText.innerHTML = 'Don\'t have an account? <span class="toggle-link" id="toggle-btn">Sign Up</span>';
+        toggleText.innerHTML = 'Don\'t have an account? <span id="toggle-btn" style="color:#007bff; cursor:pointer;">Sign Up</span>';
         document.getElementById("toggle-btn").addEventListener("click", toggleForms);
       }
     }
 
     toggleBtn.addEventListener("click", toggleForms);
+
+    // Fungsi toggle show/hide password pakai icon
+    function setupTogglePassword(iconId, inputId) {
+      const icon = document.getElementById(iconId);
+      const input = document.getElementById(inputId);
+
+      icon.addEventListener("click", () => {
+        if (input.type === "password") {
+          input.type = "text";
+          icon.style.color = "#0056b3";
+        } else {
+          input.type = "password";
+          icon.style.color = "#666";
+        }
+      });
+    }
+
+    // Pasang toggle password untuk login dan register
+    setupTogglePassword("toggleLoginPassword", "loginPassword");
+    setupTogglePassword("toggleRegPassword", "regPassword");
 
     // Login submit
     loginForm.addEventListener("submit", async (e) => {
@@ -124,6 +149,5 @@
       }
     });
   </script>
-  </div>
 </body>
 </html>
