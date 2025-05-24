@@ -1,6 +1,11 @@
 runtime: python39
 
 handlers:
+
+  - url: /auth
+    static_files: auth.html
+    upload: auth.html
+
   - url: /
     static_files: index.html
     upload: index.html
@@ -8,3 +13,4 @@ handlers:
   - url: /(.*)
     static_files: \1
     upload: (.*)
+

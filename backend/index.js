@@ -14,7 +14,6 @@ const allowedOrigins = [
   "https://be-525057870643.us-central1.run.app",
   "https://be-notesapp-525057870643.us-central1.run.app",
   "https://notes-notesappbe-525057870643.us-central1.run.app",
-  // "https://notes-notesappbe-525057870643.us-central1.run.app",
 ];
 
 app.use(cors({
