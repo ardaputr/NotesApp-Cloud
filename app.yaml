@@ -14,11 +14,3 @@ handlers:
     static_files: \1
     upload: (.*)
 
-  - env_variables:
-    DB_NAME: "notesapp"
-    DB_USER: "root"
-    DB_PASS: "Tanyaarda"
-    DB_HOST: "34.72.212.141"
-    JWT_SECRET: "rahasia"
-    JWT_REFRESH_SECRET: "rahasia"
-
