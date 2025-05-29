@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <link rel="stylesheet" href="./stylelogin.css" />
+  </head>
+  <body>
+    <div class="auth-container"></div>
+    <h2 id="form-title">Login</h2>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="active" novalidate>
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <div class="password-wrapper">
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Password"
+          required
+        />
+        <span
+          id="toggleLoginPassword"
+          class="password-toggle-icon"
+          title="Show/Hide Password"
+          >&#128065;</span
+        >
+        <!-- &#128065; adalah emoji mata sebagai ikon -->
+      </div>
+      <button type="submit">Login</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" novalidate style="display: none">
+      <input type="text" id="regName" placeholder="Name" required />
+      <input type="email" id="regEmail" placeholder="Email" required />
+      <div class="password-wrapper">
+        <input
+          type="password"
+          id="regPassword"
+          placeholder="Password"
+          required
+        />
+        <span
+          id="toggleRegPassword"
+          class="password-toggle-icon"
+          title="Show/Hide Password"
+          >&#128065;</span
+        >
+      </div>
+      <button type="submit">Register</button>
+    </form>
+
+    <p id="toggle-text">
+      Don't have an account? <span id="toggle-btn">Sign Up</span>
+    </p>
+
+    <script>
+      // const BASE_URL = "http://localhost:5000/auth";
+      const BASE_URL =
+        "https://notes-notesappbe-525057870643.us-central1.run.app/auth";
+      // const BASE_URL = "https://notes-notesappbe-525057870643.us-central1.run.app";
+      // const BASE_URL = "https://be-525057870643.us-central1.run.app/auth";
+
+      const loginForm = document.getElementById("loginForm");
+      const registerForm = document.getElementById("registerForm");
+      const toggleText = document.getElementById("toggle-text");
+      const toggleBtn = document.getElementById("toggle-btn");
+      const formTitle = document.getElementById("form-title");
+
+      function toggleForms() {
+        if (loginForm.style.display !== "none") {
+          loginForm.style.display = "none";
+          registerForm.style.display = "block";
+          formTitle.textContent = "Register";
+
+          toggleText.innerHTML =
+            'Have an account? <span id="toggle-btn" style="color:#007bff; cursor:pointer;">Sign In</span>';
+          document
+            .getElementById("toggle-btn")
+            .addEventListener("click", toggleForms);
+        } else {
+          registerForm.style.display = "none";
+          loginForm.style.display = "block";
+          formTitle.textContent = "Login";
+
+          toggleText.innerHTML =
+            'Don\'t have an account? <span id="toggle-btn" style="color:#007bff; cursor:pointer;">Sign Up</span>';
+          document
+            .getElementById("toggle-btn")
+            .addEventListener("click", toggleForms);
+        }
+      }
+
+      toggleBtn.addEventListener("click", toggleForms);
+
+      // Fungsi toggle show/hide password pakai icon
+      function setupTogglePassword(iconId, inputId) {
+        const icon = document.getElementById(iconId);
+        const input = document.getElementById(inputId);
+
+        icon.addEventListener("click", () => {
+          if (input.type === "password") {
+            input.type = "text";
+            icon.style.color = "#0056b3";
+          } else {
+            input.type = "password";
+            icon.style.color = "#666";
+          }
+        });
+      }
+
+      // Pasang toggle password untuk login dan register
+      setupTogglePassword("toggleLoginPassword", "loginPassword");
+      setupTogglePassword("toggleRegPassword", "regPassword");
+
+      // Login submit
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
+
+        if (!email || !password) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        try {
+          const res = await fetch(`${BASE_URL}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            localStorage.setItem("accessToken", data.accessToken);
+            alert("Login berhasil!");
+            window.location.href = "index.html";
+          } else {
+            alert(data.message || "Login gagal");
+          }
+        } catch (error) {
+          alert("Terjadi kesalahan saat login.");
+          console.error(error);
+        }
+      });
+
+      // Register submit
+      registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("regName").value.trim();
+        const email = document.getElementById("regEmail").value.trim();
+        const password = document.getElementById("regPassword").value;
+
+        if (!name || !email || !password) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        try {
+          const res = await fetch(`${BASE_URL}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password }),
+          });
+          const data = await res.json();
+
+          alert(data.message || "Unknown response");
+          if (res.ok) {
+            toggleForms();
+          }
+        } catch (error) {
+          alert("Terjadi kesalahan saat registrasi.");
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>

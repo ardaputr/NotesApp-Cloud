@@ -1,0 +1,12 @@
+steps:
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - app
+      - deploy
+      - app.yaml
+      - "--quiet"
+    dir: "."  # karena app.yaml ada di root
+
+options:
+  logging: CLOUD_LOGGING_ONLY

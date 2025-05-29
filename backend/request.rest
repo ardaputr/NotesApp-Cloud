@@ -1,0 +1,26 @@
+### Get semua catatan
+GET http://localhost:5000/notes
+
+### Get catatan berdasarkan ID
+GET http://localhost:5000/1
+
+### Tambah catatan
+POST http://localhost:5000/
+Content-Type: application/json
+
+{
+  "judul": "Belajar Cloud Computing",
+  "deskripsi": "Mempelajari konsep dasar Cloud Computing"
+}
+
+### Update catatan
+PUT http://localhost:5000/1
+Content-Type: application/json
+
+{
+  "judul": "Belajar Cloud Computing dengan baik",
+  "deskripsi": "Mempelajari konsep dasar Cloud Computing dengan baik"
+}
+
+### Hapus catatan
+DELETE http://localhost:5000/1
